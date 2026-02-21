@@ -3,11 +3,22 @@ import { createClient } from '@supabase/supabase-js';
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || '';
 const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || '';
 
-if (!supabaseUrl || !supabaseAnonKey) {
-  throw new Error('Missing Supabase URL or Anon Key. Check your .env.local');
+// Check if credentials are configured
+const isConfigured = supabaseUrl &&
+  supabaseAnonKey &&
+  supabaseUrl !== 'your_supabase_url' &&
+  supabaseAnonKey !== 'your_supabase_anon_key';
+
+if (!isConfigured) {
+  console.warn('⚠️ Supabase credentials not configured. Please update .env.local file.');
+  console.warn('Frontend will run but authentication and database features will not work.');
 }
 
-export const supabase = createClient(supabaseUrl, supabaseAnonKey);
+// Create client with dummy values if not configured (prevents crashes)
+export const supabase = createClient(
+  supabaseUrl || 'https://placeholder.supabase.co',
+  supabaseAnonKey || 'placeholder-key'
+);
 
 export async function getSession() {
   const {
