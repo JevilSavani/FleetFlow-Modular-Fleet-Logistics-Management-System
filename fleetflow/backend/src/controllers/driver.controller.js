@@ -2,6 +2,12 @@ import { supabase } from '../supabaseClient.js';
 
 export const addDriver = async (req, res) => {
   try {
+    if (!supabase) {
+      return res.status(503).json({
+        error: 'Database not configured. Please add Supabase credentials to .env file.'
+      });
+    }
+
     const { name, license_number, license_expiry } = req.body;
 
     if (!name || !license_number || !license_expiry) {
@@ -30,6 +36,12 @@ export const addDriver = async (req, res) => {
 
 export const getDrivers = async (req, res) => {
   try {
+    if (!supabase) {
+      return res.status(503).json({
+        error: 'Database not configured. Please add Supabase credentials to .env file.'
+      });
+    }
+
     const { data, error } = await supabase.from('drivers').select('*');
 
     if (error) return res.status(400).json({ error: error.message });
