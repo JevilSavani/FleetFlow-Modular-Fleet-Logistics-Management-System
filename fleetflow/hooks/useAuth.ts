@@ -29,6 +29,12 @@ export function useAuth() {
       data: { subscription },
     } = supabase.auth.onAuthStateChange((_event, session) => {
       setUser(session?.user || null);
+      // Sync auth cookie with actual auth state
+      if (session?.user) {
+        document.cookie = 'fleetflow_auth=true; path=/; max-age=604800; SameSite=Lax';
+      } else {
+        document.cookie = 'fleetflow_auth=; path=/; max-age=0; SameSite=Lax';
+      }
     });
 
     return () => subscription?.unsubscribe();
@@ -36,6 +42,8 @@ export function useAuth() {
 
   const signOut = async () => {
     try {
+      // Clear auth cookie before signing out
+      document.cookie = 'fleetflow_auth=; path=/; max-age=0; SameSite=Lax';
       await supabase.auth.signOut();
       setUser(null);
       router.push('/login');

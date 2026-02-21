@@ -28,6 +28,8 @@ export default function LoginPage() {
       if (signInError) {
         setError(signInError.message);
       } else {
+        // Set auth cookie so middleware can detect authenticated state
+        document.cookie = 'fleetflow_auth=true; path=/; max-age=604800; SameSite=Lax';
         router.push('/dashboard');
       }
     } catch (err) {

@@ -12,12 +12,18 @@ import Link from 'next/link';
 export default function DriverDetailPage() {
   const params = useParams();
   const id = params.id as string;
-  const { getDriverById, loading, error } = useDrivers();
+  const { getDriverById } = useDrivers();
   const [driver, setDriver] = useState<Driver | null>(null);
+  const [pageLoading, setPageLoading] = useState(true);
+  const [pageError, setPageError] = useState<string | null>(null);
 
   useEffect(() => {
     if (id) {
-      getDriverById(id).then(setDriver);
+      setPageLoading(true);
+      getDriverById(id)
+        .then((data) => setDriver(data as Driver))
+        .catch(() => setPageError('Failed to load driver'))
+        .finally(() => setPageLoading(false));
     }
   }, [id, getDriverById]);
 
@@ -32,15 +38,15 @@ export default function DriverDetailPage() {
           <span>Back to Drivers</span>
         </Link>
 
-        {loading && (
+        {pageLoading && (
           <div className="flex items-center justify-center py-20">
             <div className="animate-spin rounded-full h-10 w-10 border-[3px] border-blue-500/20 border-t-blue-600"></div>
           </div>
         )}
 
-        {error && (
+        {pageError && (
           <div className="alert-error">
-            <span>{error}</span>
+            <span>{pageError}</span>
           </div>
         )}
 

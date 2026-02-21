@@ -12,12 +12,18 @@ import Link from 'next/link';
 export default function VehicleDetailPage() {
   const params = useParams();
   const id = params.id as string;
-  const { getVehicleById, loading, error } = useVehicles();
+  const { getVehicleById } = useVehicles();
   const [vehicle, setVehicle] = useState<Vehicle | null>(null);
+  const [pageLoading, setPageLoading] = useState(true);
+  const [pageError, setPageError] = useState<string | null>(null);
 
   useEffect(() => {
     if (id) {
-      getVehicleById(id).then(setVehicle);
+      setPageLoading(true);
+      getVehicleById(id)
+        .then((data) => setVehicle(data as Vehicle))
+        .catch(() => setPageError('Failed to load vehicle'))
+        .finally(() => setPageLoading(false));
     }
   }, [id, getVehicleById]);
 
@@ -32,15 +38,15 @@ export default function VehicleDetailPage() {
           <span>Back to Vehicles</span>
         </Link>
 
-        {loading && (
+        {pageLoading && (
           <div className="flex items-center justify-center py-20">
             <div className="animate-spin rounded-full h-10 w-10 border-[3px] border-blue-500/20 border-t-blue-600"></div>
           </div>
         )}
 
-        {error && (
+        {pageError && (
           <div className="alert-error">
-            <span>{error}</span>
+            <span>{pageError}</span>
           </div>
         )}
 
