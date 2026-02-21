@@ -2,6 +2,12 @@ import { supabase } from '../supabaseClient.js';
 
 export const addVehicle = async (req, res) => {
   try {
+    if (!supabase) {
+      return res.status(503).json({
+        error: 'Database not configured. Please add Supabase credentials to .env file.'
+      });
+    }
+
     const { model, license_plate, max_capacity } = req.body;
 
     if (!model || !license_plate || !max_capacity) {
@@ -27,6 +33,12 @@ export const addVehicle = async (req, res) => {
 
 export const getVehicles = async (req, res) => {
   try {
+    if (!supabase) {
+      return res.status(503).json({
+        error: 'Database not configured. Please add Supabase credentials to .env file.'
+      });
+    }
+
     const { data, error } = await supabase.from('vehicles').select('*');
 
     if (error) {

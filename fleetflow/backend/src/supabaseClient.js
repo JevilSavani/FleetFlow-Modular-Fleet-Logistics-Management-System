@@ -1,13 +1,20 @@
 import dotenv from 'dotenv';
-dotenv.config(); // 👈 LOAD ENV HERE FIRST
+dotenv.config();
 
 import { createClient } from '@supabase/supabase-js';
 
-if (!process.env.SUPABASE_URL || !process.env.SUPABASE_SERVICE_ROLE_KEY) {
-  throw new Error('Supabase environment variables are missing');
+const supabaseUrl = process.env.SUPABASE_URL;
+const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+
+let supabase = null;
+
+// Check if credentials are configured
+if (!supabaseUrl || !supabaseKey || supabaseUrl === 'your_supabase_url') {
+  console.warn('⚠️  Supabase credentials not configured. Please update backend/.env file.');
+  console.warn('Backend will run but database operations will fail until configured.');
+} else {
+  supabase = createClient(supabaseUrl, supabaseKey);
+  console.log('✅ Supabase client initialized successfully');
 }
 
-export const supabase = createClient(
-  process.env.SUPABASE_URL,
-  process.env.SUPABASE_SERVICE_ROLE_KEY
-);
+export { supabase };
