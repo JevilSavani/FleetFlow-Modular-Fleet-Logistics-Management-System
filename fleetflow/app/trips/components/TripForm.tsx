@@ -7,6 +7,7 @@ import { useRouter } from 'next/navigation';
 import { validateTripForm } from '@/lib/validations';
 import { useVehicles } from '@/hooks/useVehicles';
 import { useDrivers } from '@/hooks/useDrivers';
+import { Save } from 'lucide-react';
 
 export function TripForm() {
   const [formData, setFormData] = useState<TripFormData>({
@@ -57,192 +58,191 @@ export function TripForm() {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="max-w-2xl mx-auto space-y-6 bg-white p-6 rounded-lg shadow">
-      {errors.length > 0 && (
-        <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded">
-          {errors.map((error, i) => (
-            <p key={i}>{error}</p>
-          ))}
-        </div>
-      )}
-
-      <div className="grid grid-cols-2 gap-4">
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">
-            Vehicle *
-          </label>
-          <select
-            name="vehicle_id"
-            value={formData.vehicle_id}
-            onChange={handleChange}
-            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
-            required
-          >
-            <option value="">Select a Vehicle</option>
-            {vehicles.map((vehicle) => (
-              <option key={vehicle.id} value={vehicle.id}>
-                {vehicle.registration_number} - {vehicle.make} {vehicle.model}
-              </option>
+    <form onSubmit={handleSubmit} className="max-w-2xl mx-auto space-y-6">
+      <div className="card p-6 space-y-6">
+        {errors.length > 0 && (
+          <div className="alert-error">
+            {errors.map((error, i) => (
+              <p key={i} className="text-sm">{error}</p>
             ))}
-          </select>
+          </div>
+        )}
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+          <div>
+            <label className="block text-xs font-medium text-slate-500 mb-1.5 uppercase tracking-wider">
+              Vehicle *
+            </label>
+            <select
+              name="vehicle_id"
+              value={formData.vehicle_id}
+              onChange={handleChange}
+              className="input-field"
+              required
+            >
+              <option value="">Select a Vehicle</option>
+              {vehicles.map((vehicle) => (
+                <option key={vehicle.id} value={vehicle.id}>
+                  {vehicle.registration_number} - {vehicle.make} {vehicle.model}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          <div>
+            <label className="block text-xs font-medium text-slate-500 mb-1.5 uppercase tracking-wider">
+              Driver *
+            </label>
+            <select
+              name="driver_id"
+              value={formData.driver_id}
+              onChange={handleChange}
+              className="input-field"
+              required
+            >
+              <option value="">Select a Driver</option>
+              {drivers.map((driver) => (
+                <option key={driver.id} value={driver.id}>
+                  {driver.first_name} {driver.last_name}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          <div>
+            <label className="block text-xs font-medium text-slate-500 mb-1.5 uppercase tracking-wider">
+              Origin *
+            </label>
+            <input
+              type="text"
+              name="origin"
+              value={formData.origin}
+              onChange={handleChange}
+              placeholder="e.g., Delhi"
+              className="input-field"
+              required
+            />
+          </div>
+
+          <div>
+            <label className="block text-xs font-medium text-slate-500 mb-1.5 uppercase tracking-wider">
+              Destination *
+            </label>
+            <input
+              type="text"
+              name="destination"
+              value={formData.destination}
+              onChange={handleChange}
+              placeholder="e.g., Jaipur"
+              className="input-field"
+              required
+            />
+          </div>
+
+          <div>
+            <label className="block text-xs font-medium text-slate-500 mb-1.5 uppercase tracking-wider">
+              Cargo Weight (kg) *
+            </label>
+            <input
+              type="number"
+              name="cargo_weight"
+              value={formData.cargo_weight}
+              onChange={handleChange}
+              placeholder="2500"
+              className="input-field"
+              required
+            />
+          </div>
+
+          <div>
+            <label className="block text-xs font-medium text-slate-500 mb-1.5 uppercase tracking-wider">
+              Planned Distance (km) *
+            </label>
+            <input
+              type="number"
+              name="distance_planned"
+              value={formData.distance_planned}
+              onChange={handleChange}
+              placeholder="250"
+              className="input-field"
+              required
+            />
+          </div>
+
+          <div className="col-span-full">
+            <label className="block text-xs font-medium text-slate-500 mb-1.5 uppercase tracking-wider">
+              Cargo Description *
+            </label>
+            <textarea
+              name="cargo_description"
+              value={formData.cargo_description}
+              onChange={handleChange}
+              placeholder="Describe the cargo being transported"
+              rows={3}
+              className="input-field resize-none"
+              required
+            />
+          </div>
+
+          <div>
+            <label className="block text-xs font-medium text-slate-500 mb-1.5 uppercase tracking-wider">
+              Scheduled Departure *
+            </label>
+            <input
+              type="datetime-local"
+              name="scheduled_departure"
+              value={formData.scheduled_departure}
+              onChange={handleChange}
+              className="input-field"
+              required
+            />
+          </div>
+
+          <div>
+            <label className="block text-xs font-medium text-slate-500 mb-1.5 uppercase tracking-wider">
+              Scheduled Arrival *
+            </label>
+            <input
+              type="datetime-local"
+              name="scheduled_arrival"
+              value={formData.scheduled_arrival}
+              onChange={handleChange}
+              className="input-field"
+              required
+            />
+          </div>
+
+          <div>
+            <label className="block text-xs font-medium text-slate-500 mb-1.5 uppercase tracking-wider">
+              Cargo Value (Optional)
+            </label>
+            <input
+              type="number"
+              name="cargo_value"
+              placeholder="50000"
+              step="0.01"
+              className="input-field"
+            />
+          </div>
+
+          <div>
+            <label className="block text-xs font-medium text-slate-500 mb-1.5 uppercase tracking-wider">
+              Notes (Optional)
+            </label>
+            <input
+              type="text"
+              name="notes"
+              placeholder="Add any special instructions or notes"
+              className="input-field"
+            />
+          </div>
         </div>
 
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">
-            Driver *
-          </label>
-          <select
-            name="driver_id"
-            value={formData.driver_id}
-            onChange={handleChange}
-            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
-            required
-          >
-            <option value="">Select a Driver</option>
-            {drivers.map((driver) => (
-              <option key={driver.id} value={driver.id}>
-                {driver.first_name} {driver.last_name}
-              </option>
-            ))}
-          </select>
-        </div>
-
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">
-            Origin *
-          </label>
-          <input
-            type="text"
-            name="origin"
-            value={formData.origin}
-            onChange={handleChange}
-            placeholder="e.g., Delhi"
-            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
-            required
-          />
-        </div>
-
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">
-            Destination *
-          </label>
-          <input
-            type="text"
-            name="destination"
-            value={formData.destination}
-            onChange={handleChange}
-            placeholder="e.g., Jaipur"
-            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
-            required
-          />
-        </div>
-
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">
-            Cargo Weight (kg) *
-          </label>
-          <input
-            type="number"
-            name="cargo_weight"
-            value={formData.cargo_weight}
-            onChange={handleChange}
-            placeholder="2500"
-            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
-            required
-          />
-        </div>
-
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">
-            Planned Distance (km) *
-          </label>
-          <input
-            type="number"
-            name="distance_planned"
-            value={formData.distance_planned}
-            onChange={handleChange}
-            placeholder="250"
-            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
-            required
-          />
-        </div>
-
-        <div className="col-span-2">
-          <label className="block text-sm font-medium text-gray-700 mb-2">
-            Cargo Description *
-          </label>
-          <textarea
-            name="cargo_description"
-            value={formData.cargo_description}
-            onChange={handleChange}
-            placeholder="Describe the cargo being transported"
-            rows={3}
-            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
-            required
-          />
-        </div>
-
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">
-            Scheduled Departure *
-          </label>
-          <input
-            type="datetime-local"
-            name="scheduled_departure"
-            value={formData.scheduled_departure}
-            onChange={handleChange}
-            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
-            required
-          />
-        </div>
-
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">
-            Scheduled Arrival *
-          </label>
-          <input
-            type="datetime-local"
-            name="scheduled_arrival"
-            value={formData.scheduled_arrival}
-            onChange={handleChange}
-            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
-            required
-          />
-        </div>
-
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">
-            Cargo Value (Optional)
-          </label>
-          <input
-            type="number"
-            name="cargo_value"
-            placeholder="50000"
-            step="0.01"
-            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
-          />
-        </div>
-
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">
-            Notes (Optional)
-          </label>
-          <input
-            type="text"
-            name="notes"
-            placeholder="Add any special instructions or notes"
-            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
-          />
-        </div>
+        <button type="submit" disabled={loading} className="btn-primary w-full py-3">
+          <Save size={18} />
+          <span>{loading ? 'Creating Trip...' : 'Create Trip'}</span>
+        </button>
       </div>
-
-      <button
-        type="submit"
-        disabled={loading}
-        className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-lg disabled:opacity-50 transition"
-      >
-        {loading ? 'Creating Trip...' : 'Create Trip'}
-      </button>
     </form>
   );
 }

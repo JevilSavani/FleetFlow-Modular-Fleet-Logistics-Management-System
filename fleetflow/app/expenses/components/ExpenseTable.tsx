@@ -22,54 +22,59 @@ export function ExpenseTable() {
     },
   ];
 
+  const typeColors: Record<string, string> = {
+    Fuel: 'bg-orange-50 text-orange-700 ring-orange-600/20',
+    Toll: 'bg-blue-50 text-blue-700 ring-blue-600/20',
+    Maintenance: 'bg-amber-50 text-amber-700 ring-amber-600/20',
+  };
+
   return (
-    <div className="bg-white rounded-lg shadow overflow-x-auto">
-      <table className="w-full">
-        <thead className="bg-gray-100 border-b">
-          <tr>
-            <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700">
-              Vehicle
-            </th>
-            <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700">
-              Type
-            </th>
-            <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700">
-              Amount
-            </th>
-            <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700">
-              Description
-            </th>
-            <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700">
-              Date
-            </th>
-            <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700">
-              Status
-            </th>
-          </tr>
-        </thead>
-        <tbody className="divide-y">
-          {mockExpenses.map((expense) => (
-            <tr key={expense.id} className="hover:bg-gray-50">
-              <td className="px-6 py-4 font-semibold text-gray-900">{expense.vehicle}</td>
-              <td className="px-6 py-4 text-gray-700">{expense.type}</td>
-              <td className="px-6 py-4 text-gray-700">₹{expense.amount}</td>
-              <td className="px-6 py-4 text-gray-700">{expense.description}</td>
-              <td className="px-6 py-4 text-gray-700">{expense.date}</td>
-              <td className="px-6 py-4">
-                <span
-                  className={`px-3 py-1 rounded-full text-sm font-semibold ${
-                    expense.status === 'Approved'
-                      ? 'bg-green-100 text-green-800'
-                      : 'bg-yellow-100 text-yellow-800'
-                  }`}
-                >
-                  {expense.status}
-                </span>
-              </td>
+    <div className="card overflow-hidden">
+      <div className="overflow-x-auto">
+        <table className="w-full">
+          <thead>
+            <tr>
+              <th>Vehicle</th>
+              <th>Type</th>
+              <th>Amount</th>
+              <th>Description</th>
+              <th>Date</th>
+              <th>Status</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {mockExpenses.map((expense) => (
+              <tr key={expense.id}>
+                <td className="font-semibold text-slate-900">{expense.vehicle}</td>
+                <td>
+                  <span
+                    className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold ring-1 ring-inset ${
+                      typeColors[expense.type] || 'bg-slate-50 text-slate-700 ring-slate-600/20'
+                    }`}
+                  >
+                    {expense.type}
+                  </span>
+                </td>
+                <td className="text-slate-600 font-medium">\u20B9{expense.amount}</td>
+                <td className="text-slate-600">{expense.description}</td>
+                <td className="text-slate-600">{expense.date}</td>
+                <td>
+                  <span
+                    className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold ring-1 ring-inset ${
+                      expense.status === 'Approved'
+                        ? 'bg-emerald-50 text-emerald-700 ring-emerald-600/20'
+                        : 'bg-amber-50 text-amber-700 ring-amber-600/20'
+                    }`}
+                  >
+                    <span className={`w-1.5 h-1.5 rounded-full ${expense.status === 'Approved' ? 'bg-emerald-500' : 'bg-amber-500'}`} />
+                    {expense.status}
+                  </span>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 }

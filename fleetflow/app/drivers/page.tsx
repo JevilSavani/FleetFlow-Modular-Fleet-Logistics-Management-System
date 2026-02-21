@@ -3,7 +3,7 @@
 import { ProtectedRoute } from '@/components/ProtectedRoute';
 import { useDrivers } from '@/hooks/useDrivers';
 import { StatusPill } from '@/components/StatusPill';
-import { Plus, Eye, Edit2, Trash2 } from 'lucide-react';
+import { Plus, Eye, Pencil, Trash2, Users } from 'lucide-react';
 import Link from 'next/link';
 
 export default function DriversPage() {
@@ -11,102 +11,105 @@ export default function DriversPage() {
 
   return (
     <ProtectedRoute>
-      <div className="space-y-6">
-        <div className="flex justify-between items-center">
-          <h1 className="text-3xl font-bold text-gray-800">Drivers</h1>
-          <button className="flex items-center space-x-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition">
-            <Plus size={20} />
+      <div className="space-y-6 animate-fade-in">
+        <div className="page-header">
+          <div>
+            <h1 className="page-title">Drivers</h1>
+            <p className="page-subtitle">Manage driver profiles and performance</p>
+          </div>
+          <button className="btn-primary">
+            <Plus size={18} />
             <span>Add Driver</span>
           </button>
         </div>
 
         {error && (
-          <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded">
-            {error}
+          <div className="alert-error">
+            <span>{error}</span>
           </div>
         )}
 
         {loading ? (
-          <div className="text-center py-8">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
+          <div className="flex items-center justify-center py-20">
+            <div className="text-center">
+              <div className="animate-spin rounded-full h-10 w-10 border-[3px] border-blue-500/20 border-t-blue-600 mx-auto mb-3"></div>
+              <p className="text-slate-400 text-sm">Loading drivers...</p>
+            </div>
+          </div>
+        ) : drivers.length === 0 ? (
+          <div className="card flex flex-col items-center justify-center py-20">
+            <div className="w-16 h-16 bg-slate-100 rounded-2xl flex items-center justify-center mb-4">
+              <Users size={28} className="text-slate-400" />
+            </div>
+            <h3 className="text-lg font-semibold text-slate-700">No drivers yet</h3>
+            <p className="text-slate-400 text-sm mt-1 mb-4">Add your first driver to get started</p>
+            <button className="btn-primary text-sm">
+              <Plus size={16} />
+              <span>Add Driver</span>
+            </button>
           </div>
         ) : (
-          <div className="bg-white rounded-lg shadow overflow-x-auto">
-            <table className="w-full">
-              <thead className="bg-gray-100 border-b">
-                <tr>
-                  <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700">
-                    Name
-                  </th>
-                  <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700">
-                    Email
-                  </th>
-                  <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700">
-                    Phone
-                  </th>
-                  <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700">
-                    License Expiry
-                  </th>
-                  <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700">
-                    Status
-                  </th>
-                  <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700">
-                    Safety Score
-                  </th>
-                  <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700">
-                    Actions
-                  </th>
-                </tr>
-              </thead>
-              <tbody className="divide-y">
-                {drivers.length === 0 ? (
+          <div className="card overflow-hidden">
+            <div className="overflow-x-auto">
+              <table className="w-full">
+                <thead>
                   <tr>
-                    <td colSpan={7} className="px-6 py-8 text-center text-gray-500">
-                      No drivers found
-                    </td>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Phone</th>
+                    <th>License Expiry</th>
+                    <th>Status</th>
+                    <th>Safety Score</th>
+                    <th className="text-right">Actions</th>
                   </tr>
-                ) : (
-                  drivers.map((driver) => (
-                    <tr key={driver.id} className="hover:bg-gray-50">
-                      <td className="px-6 py-4 font-semibold text-gray-900">
+                </thead>
+                <tbody>
+                  {drivers.map((driver) => (
+                    <tr key={driver.id}>
+                      <td className="font-semibold text-slate-900">
                         {driver.first_name} {driver.last_name}
                       </td>
-                      <td className="px-6 py-4 text-gray-700">{driver.email}</td>
-                      <td className="px-6 py-4 text-gray-700">{driver.phone}</td>
-                      <td className="px-6 py-4 text-gray-700">{driver.license_expiry}</td>
-                      <td className="px-6 py-4">
+                      <td className="text-slate-600">{driver.email}</td>
+                      <td className="text-slate-600">{driver.phone}</td>
+                      <td className="text-slate-600">{driver.license_expiry}</td>
+                      <td>
                         <StatusPill status={driver.status} type="driver" size="sm" />
                       </td>
-                      <td className="px-6 py-4">
-                        <div className="flex items-center space-x-2">
-                          <div className="w-24 bg-gray-200 rounded-full h-2">
+                      <td>
+                        <div className="flex items-center gap-2.5">
+                          <div className="w-20 bg-slate-100 rounded-full h-1.5 overflow-hidden">
                             <div
-                              className="bg-green-500 h-2 rounded-full"
+                              className={`h-full rounded-full transition-all ${
+                                driver.safety_score >= 80 ? 'bg-emerald-500' :
+                                driver.safety_score >= 60 ? 'bg-amber-500' : 'bg-red-500'
+                              }`}
                               style={{ width: `${driver.safety_score}%` }}
-                            ></div>
+                            />
                           </div>
-                          <span className="font-semibold">{driver.safety_score}</span>
+                          <span className="text-xs font-bold text-slate-700">{driver.safety_score}</span>
                         </div>
                       </td>
-                      <td className="px-6 py-4 space-x-2 flex">
-                        <Link
-                          href={`/drivers/${driver.id}`}
-                          className="text-blue-600 hover:text-blue-800 p-2 hover:bg-blue-50 rounded"
-                        >
-                          <Eye size={18} />
-                        </Link>
-                        <button className="text-orange-600 hover:text-orange-800 p-2 hover:bg-orange-50 rounded">
-                          <Edit2 size={18} />
-                        </button>
-                        <button className="text-red-600 hover:text-red-800 p-2 hover:bg-red-50 rounded">
-                          <Trash2 size={18} />
-                        </button>
+                      <td>
+                        <div className="flex items-center justify-end gap-1">
+                          <Link
+                            href={`/drivers/${driver.id}`}
+                            className="p-2 text-slate-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition"
+                          >
+                            <Eye size={16} />
+                          </Link>
+                          <button className="p-2 text-slate-400 hover:text-amber-600 hover:bg-amber-50 rounded-lg transition">
+                            <Pencil size={16} />
+                          </button>
+                          <button className="p-2 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition">
+                            <Trash2 size={16} />
+                          </button>
+                        </div>
                       </td>
                     </tr>
-                  ))
-                )}
-              </tbody>
-            </table>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           </div>
         )}
       </div>

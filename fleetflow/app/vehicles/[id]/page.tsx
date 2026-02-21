@@ -6,7 +6,7 @@ import { useParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { Vehicle } from '@/types/vehicle';
 import { StatusPill } from '@/components/StatusPill';
-import { ArrowLeft } from 'lucide-react';
+import { ArrowLeft, Truck, Fuel, Calendar, Shield } from 'lucide-react';
 import Link from 'next/link';
 
 export default function VehicleDetailPage() {
@@ -23,107 +23,111 @@ export default function VehicleDetailPage() {
 
   return (
     <ProtectedRoute>
-      <div className="space-y-6">
+      <div className="space-y-6 animate-fade-in">
         <Link
           href="/vehicles"
-          className="flex items-center space-x-2 text-blue-600 hover:text-blue-800"
+          className="inline-flex items-center gap-2 text-sm text-slate-500 hover:text-blue-600 transition font-medium"
         >
-          <ArrowLeft size={20} />
+          <ArrowLeft size={16} />
           <span>Back to Vehicles</span>
         </Link>
 
         {loading && (
-          <div className="text-center py-8">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
+          <div className="flex items-center justify-center py-20">
+            <div className="animate-spin rounded-full h-10 w-10 border-[3px] border-blue-500/20 border-t-blue-600"></div>
           </div>
         )}
 
         {error && (
-          <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded">
-            {error}
+          <div className="alert-error">
+            <span>{error}</span>
           </div>
         )}
 
         {vehicle && (
-          <div className="bg-white rounded-lg shadow p-6 space-y-6">
-            <div className="flex justify-between items-start">
-              <div>
-                <h1 className="text-3xl font-bold text-gray-800">
-                  {vehicle.make} {vehicle.model}
-                </h1>
-                <p className="text-gray-600 mt-2">{vehicle.registration_number}</p>
+          <>
+            {/* Hero card */}
+            <div className="card p-6">
+              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                <div className="flex items-center gap-4">
+                  <div className="w-14 h-14 bg-blue-100 rounded-2xl flex items-center justify-center">
+                    <Truck size={26} className="text-blue-600" />
+                  </div>
+                  <div>
+                    <h1 className="text-2xl font-bold text-slate-900">
+                      {vehicle.make} {vehicle.model}
+                    </h1>
+                    <p className="text-slate-500 text-sm mt-0.5">{vehicle.registration_number}</p>
+                  </div>
+                </div>
+                <StatusPill status={vehicle.status} type="vehicle" size="lg" />
               </div>
-              <StatusPill status={vehicle.status} type="vehicle" />
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div>
-                <h2 className="text-xl font-semibold text-gray-800 mb-4">Vehicle Details</h2>
+            {/* Details grid */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+              <div className="card p-6">
+                <div className="flex items-center gap-2 mb-5">
+                  <Truck size={16} className="text-blue-600" />
+                  <h2 className="text-sm font-semibold text-slate-800">Vehicle Details</h2>
+                </div>
                 <div className="space-y-3">
-                  <div className="flex justify-between border-b pb-2">
-                    <span className="text-gray-600">Type:</span>
-                    <span className="font-semibold">{vehicle.vehicle_type}</span>
-                  </div>
-                  <div className="flex justify-between border-b pb-2">
-                    <span className="text-gray-600">Year:</span>
-                    <span className="font-semibold">{vehicle.year}</span>
-                  </div>
-                  <div className="flex justify-between border-b pb-2">
-                    <span className="text-gray-600">Fuel Type:</span>
-                    <span className="font-semibold">{vehicle.fuel_type}</span>
-                  </div>
-                  <div className="flex justify-between border-b pb-2">
-                    <span className="text-gray-600">Mileage:</span>
-                    <span className="font-semibold">{vehicle.mileage} km</span>
-                  </div>
+                  {[
+                    ['Type', vehicle.vehicle_type],
+                    ['Year', vehicle.year],
+                    ['Fuel Type', vehicle.fuel_type],
+                    ['Mileage', `${vehicle.mileage} km`],
+                  ].map(([label, value]) => (
+                    <div key={String(label)} className="flex justify-between items-center py-2 border-b border-slate-100 last:border-0">
+                      <span className="text-sm text-slate-500">{label}:</span>
+                      <span className="text-sm font-semibold text-slate-800 capitalize">{value}</span>
+                    </div>
+                  ))}
                 </div>
               </div>
 
-              <div>
-                <h2 className="text-xl font-semibold text-gray-800 mb-4">Capacity & Fuel</h2>
+              <div className="card p-6">
+                <div className="flex items-center gap-2 mb-5">
+                  <Fuel size={16} className="text-emerald-600" />
+                  <h2 className="text-sm font-semibold text-slate-800">Capacity & Fuel</h2>
+                </div>
                 <div className="space-y-3">
-                  <div className="flex justify-between border-b pb-2">
-                    <span className="text-gray-600">Max Capacity:</span>
-                    <span className="font-semibold">{vehicle.max_capacity} kg</span>
-                  </div>
-                  <div className="flex justify-between border-b pb-2">
-                    <span className="text-gray-600">Current Load:</span>
-                    <span className="font-semibold">{vehicle.current_cargo_weight} kg</span>
-                  </div>
-                  <div className="flex justify-between border-b pb-2">
-                    <span className="text-gray-600">Fuel Efficiency:</span>
-                    <span className="font-semibold">{vehicle.fuel_efficiency} km/l</span>
-                  </div>
-                  <div className="flex justify-between border-b pb-2">
-                    <span className="text-gray-600">Depreciation Value:</span>
-                    <span className="font-semibold">₹{vehicle.depreciation_value}</span>
-                  </div>
+                  {[
+                    ['Max Capacity', `${vehicle.max_capacity} kg`],
+                    ['Current Load', `${vehicle.current_cargo_weight} kg`],
+                    ['Fuel Efficiency', `${vehicle.fuel_efficiency} km/l`],
+                    ['Depreciation Value', `\u20B9${vehicle.depreciation_value}`],
+                  ].map(([label, value]) => (
+                    <div key={String(label)} className="flex justify-between items-center py-2 border-b border-slate-100 last:border-0">
+                      <span className="text-sm text-slate-500">{label}:</span>
+                      <span className="text-sm font-semibold text-slate-800">{value}</span>
+                    </div>
+                  ))}
                 </div>
               </div>
             </div>
 
-            <div className="border-t pt-6">
-              <h2 className="text-xl font-semibold text-gray-800 mb-4">Maintenance & Documents</h2>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div>
-                  <p className="text-gray-600 mb-2">Last Service Date:</p>
-                  <p className="font-semibold">{vehicle.last_service_date}</p>
-                </div>
-                <div>
-                  <p className="text-gray-600 mb-2">Next Service Due:</p>
-                  <p className="font-semibold">{vehicle.next_service_due}</p>
-                </div>
-                <div>
-                  <p className="text-gray-600 mb-2">Insurance Expiry:</p>
-                  <p className="font-semibold">{vehicle.insurance_expiry}</p>
-                </div>
-                <div>
-                  <p className="text-gray-600 mb-2">Pollution Certificate Expiry:</p>
-                  <p className="font-semibold">{vehicle.pollution_certificate_expiry}</p>
-                </div>
+            {/* Maintenance & Documents */}
+            <div className="card p-6">
+              <div className="flex items-center gap-2 mb-5">
+                <Shield size={16} className="text-violet-600" />
+                <h2 className="text-sm font-semibold text-slate-800">Maintenance & Documents</h2>
+              </div>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+                {[
+                  { label: 'Last Service Date', value: vehicle.last_service_date, icon: Calendar },
+                  { label: 'Next Service Due', value: vehicle.next_service_due, icon: Calendar },
+                  { label: 'Insurance Expiry', value: vehicle.insurance_expiry, icon: Shield },
+                  { label: 'Pollution Cert Expiry', value: vehicle.pollution_certificate_expiry, icon: Shield },
+                ].map((item) => (
+                  <div key={item.label} className="bg-slate-50 rounded-xl p-4">
+                    <p className="text-xs text-slate-500 font-medium mb-1">{item.label}</p>
+                    <p className="text-sm font-semibold text-slate-800">{item.value || 'N/A'}</p>
+                  </div>
+                ))}
               </div>
             </div>
-          </div>
+          </>
         )}
       </div>
     </ProtectedRoute>

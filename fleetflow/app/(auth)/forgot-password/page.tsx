@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { supabase } from '@/lib/supabaseClient';
-import { Mail } from 'lucide-react';
+import { Mail, ArrowLeft, CheckCircle } from 'lucide-react';
 
 export default function ForgotPasswordPage() {
   const [email, setEmail] = useState('');
@@ -36,56 +36,66 @@ export default function ForgotPasswordPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-600 to-blue-800 px-4">
-      <div className="w-full max-w-md bg-white rounded-lg shadow-xl p-8">
-        <div className="text-center mb-8">
-          <div className="text-4xl mb-2">🔐</div>
-          <h1 className="text-3xl font-bold text-gray-800">Forgot Password</h1>
-          <p className="text-gray-600 mt-2">Reset your password</p>
-        </div>
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-900 via-blue-950 to-slate-900 px-4">
+      {/* Decorative */}
+      <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none">
+        <div className="absolute -top-40 -right-40 w-[600px] h-[600px] bg-blue-500/10 rounded-full blur-3xl" />
+        <div className="absolute -bottom-40 -left-40 w-[500px] h-[500px] bg-indigo-500/10 rounded-full blur-3xl" />
+      </div>
 
-        {error && (
-          <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
-            {error}
-          </div>
-        )}
-
-        {message && (
-          <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-4">
-            {message}
-          </div>
-        )}
-
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div>
-            <label className="block text-gray-700 font-semibold mb-2">Email</label>
-            <input
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder="Enter your email"
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
-              required
-            />
-          </div>
-
-          <button
-            type="submit"
-            disabled={loading}
-            className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-lg flex items-center justify-center space-x-2 disabled:opacity-50"
-          >
-            <Mail size={20} />
-            <span>{loading ? 'Sending...' : 'Send Reset Link'}</span>
-          </button>
-        </form>
-
-        <div className="mt-6 text-center">
+      <div className="relative z-10 w-full max-w-md animate-fade-in">
+        <div className="bg-white rounded-2xl shadow-2xl p-8">
           <Link
             href="/login"
-            className="text-blue-600 hover:text-blue-800 text-sm"
+            className="inline-flex items-center gap-2 text-sm text-slate-500 hover:text-slate-700 mb-6 transition"
           >
-            Back to Login
+            <ArrowLeft size={16} />
+            Back to Sign In
           </Link>
+
+          <div className="mb-8">
+            <div className="w-14 h-14 bg-blue-100 rounded-2xl flex items-center justify-center mb-4">
+              <span className="text-2xl">🔐</span>
+            </div>
+            <h1 className="text-2xl font-bold text-slate-900">Forgot Password</h1>
+            <p className="text-slate-500 mt-1">Enter your email and we&apos;ll send you a reset link</p>
+          </div>
+
+          {error && (
+            <div className="alert-error mb-6 rounded-xl text-sm">
+              <span>{error}</span>
+            </div>
+          )}
+
+          {message && (
+            <div className="alert-success mb-6 rounded-xl text-sm flex items-center gap-2">
+              <CheckCircle size={18} />
+              <span>{message}</span>
+            </div>
+          )}
+
+          <form onSubmit={handleSubmit} className="space-y-5">
+            <div>
+              <label className="block text-sm font-medium text-slate-700 mb-1.5">Email Address</label>
+              <input
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="you@company.com"
+                className="input-field"
+                required
+              />
+            </div>
+
+            <button type="submit" disabled={loading} className="btn-primary w-full py-3">
+              {loading ? (
+                <div className="animate-spin rounded-full h-5 w-5 border-2 border-white/30 border-t-white" />
+              ) : (
+                <Mail size={20} />
+              )}
+              <span>{loading ? 'Sending...' : 'Send Reset Link'}</span>
+            </button>
+          </form>
         </div>
       </div>
     </div>

@@ -3,7 +3,7 @@
 import { ProtectedRoute } from '@/components/ProtectedRoute';
 import { useTrips } from '@/hooks/useTrips';
 import { StatusPill } from '@/components/StatusPill';
-import { Plus, Eye, Edit2, Trash2 } from 'lucide-react';
+import { Plus, Eye, Pencil, Trash2, MapPin } from 'lucide-react';
 import Link from 'next/link';
 
 export default function TripsPage() {
@@ -11,99 +11,104 @@ export default function TripsPage() {
 
   return (
     <ProtectedRoute>
-      <div className="space-y-6">
-        <div className="flex justify-between items-center">
-          <h1 className="text-3xl font-bold text-gray-800">Trips</h1>
-          <Link
-            href="/trips/create"
-            className="flex items-center space-x-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition"
-          >
-            <Plus size={20} />
+      <div className="space-y-6 animate-fade-in">
+        <div className="page-header">
+          <div>
+            <h1 className="page-title">Trips</h1>
+            <p className="page-subtitle">Track and manage all fleet trips</p>
+          </div>
+          <Link href="/trips/create" className="btn-primary">
+            <Plus size={18} />
             <span>Create Trip</span>
           </Link>
         </div>
 
         {error && (
-          <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded">
-            {error}
+          <div className="alert-error">
+            <span>{error}</span>
           </div>
         )}
 
         {loading ? (
-          <div className="text-center py-8">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
+          <div className="flex items-center justify-center py-20">
+            <div className="text-center">
+              <div className="animate-spin rounded-full h-10 w-10 border-[3px] border-blue-500/20 border-t-blue-600 mx-auto mb-3"></div>
+              <p className="text-slate-400 text-sm">Loading trips...</p>
+            </div>
+          </div>
+        ) : trips.length === 0 ? (
+          <div className="card flex flex-col items-center justify-center py-20">
+            <div className="w-16 h-16 bg-slate-100 rounded-2xl flex items-center justify-center mb-4">
+              <MapPin size={28} className="text-slate-400" />
+            </div>
+            <h3 className="text-lg font-semibold text-slate-700">No trips yet</h3>
+            <p className="text-slate-400 text-sm mt-1 mb-4">Create your first trip to get started</p>
+            <Link href="/trips/create" className="btn-primary text-sm">
+              <Plus size={16} />
+              <span>Create Trip</span>
+            </Link>
           </div>
         ) : (
-          <div className="bg-white rounded-lg shadow overflow-x-auto">
-            <table className="w-full">
-              <thead className="bg-gray-100 border-b">
-                <tr>
-                  <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700">
-                    Trip #
-                  </th>
-                  <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700">
-                    Route
-                  </th>
-                  <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700">
-                    Vehicle
-                  </th>
-                  <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700">
-                    Cargo Weight
-                  </th>
-                  <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700">
-                    Status
-                  </th>
-                  <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700">
-                    Scheduled
-                  </th>
-                  <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700">
-                    Actions
-                  </th>
-                </tr>
-              </thead>
-              <tbody className="divide-y">
-                {trips.length === 0 ? (
+          <div className="card overflow-hidden">
+            <div className="overflow-x-auto">
+              <table className="w-full">
+                <thead>
                   <tr>
-                    <td colSpan={7} className="px-6 py-8 text-center text-gray-500">
-                      No trips found
-                    </td>
+                    <th>Trip #</th>
+                    <th>Route</th>
+                    <th>Vehicle</th>
+                    <th>Cargo Weight</th>
+                    <th>Status</th>
+                    <th>Scheduled</th>
+                    <th className="text-right">Actions</th>
                   </tr>
-                ) : (
-                  trips.map((trip) => (
-                    <tr key={trip.id} className="hover:bg-gray-50">
-                      <td className="px-6 py-4 font-semibold text-gray-900">
+                </thead>
+                <tbody>
+                  {trips.map((trip) => (
+                    <tr key={trip.id}>
+                      <td className="font-semibold text-slate-900">
                         {trip.trip_number}
                       </td>
-                      <td className="px-6 py-4 text-gray-700">
-                        {trip.origin} → {trip.destination}
+                      <td className="text-slate-600">
+                        <span className="inline-flex items-center gap-1.5">
+                          {trip.origin}
+                          <span className="text-slate-300">&rarr;</span>
+                          {trip.destination}
+                        </span>
                       </td>
-                      <td className="px-6 py-4 text-gray-700">{trip.vehicle_id}</td>
-                      <td className="px-6 py-4 text-gray-700">{trip.cargo_weight} kg</td>
-                      <td className="px-6 py-4">
+                      <td>
+                        <span className="text-xs font-medium text-slate-500 bg-slate-100 px-2 py-1 rounded-md">
+                          {trip.vehicle_id}
+                        </span>
+                      </td>
+                      <td className="text-slate-600">{trip.cargo_weight} kg</td>
+                      <td>
                         <StatusPill status={trip.status} type="trip" size="sm" />
                       </td>
-                      <td className="px-6 py-4 text-gray-700">
+                      <td className="text-slate-600">
                         {new Date(trip.scheduled_departure).toLocaleDateString()}
                       </td>
-                      <td className="px-6 py-4 space-x-2 flex">
-                        <Link
-                          href={`/trips/${trip.id}`}
-                          className="text-blue-600 hover:text-blue-800 p-2 hover:bg-blue-50 rounded"
-                        >
-                          <Eye size={18} />
-                        </Link>
-                        <button className="text-orange-600 hover:text-orange-800 p-2 hover:bg-orange-50 rounded">
-                          <Edit2 size={18} />
-                        </button>
-                        <button className="text-red-600 hover:text-red-800 p-2 hover:bg-red-50 rounded">
-                          <Trash2 size={18} />
-                        </button>
+                      <td>
+                        <div className="flex items-center justify-end gap-1">
+                          <Link
+                            href={`/trips/${trip.id}`}
+                            className="p-2 text-slate-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition"
+                          >
+                            <Eye size={16} />
+                          </Link>
+                          <button className="p-2 text-slate-400 hover:text-amber-600 hover:bg-amber-50 rounded-lg transition">
+                            <Pencil size={16} />
+                          </button>
+                          <button className="p-2 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition">
+                            <Trash2 size={16} />
+                          </button>
+                        </div>
                       </td>
                     </tr>
-                  ))
-                )}
-              </tbody>
-            </table>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           </div>
         )}
       </div>

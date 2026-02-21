@@ -1,7 +1,7 @@
 'use client';
 
 import { ProtectedRoute } from '@/components/ProtectedRoute';
-import { Plus, Eye, Edit2, Trash2 } from 'lucide-react';
+import { Plus, Eye, Pencil, Trash2, IndianRupee, Clock, TrendingDown } from 'lucide-react';
 
 export default function ExpensesPage() {
   const mockExpenses = [
@@ -35,109 +35,121 @@ export default function ExpensesPage() {
   ];
 
   const typeColors: Record<string, string> = {
-    Fuel: 'bg-orange-100 text-orange-800',
-    Toll: 'bg-blue-100 text-blue-800',
-    Maintenance: 'bg-yellow-100 text-yellow-800',
-    Parking: 'bg-purple-100 text-purple-800',
+    Fuel: 'bg-orange-50 text-orange-700 ring-orange-600/20',
+    Toll: 'bg-blue-50 text-blue-700 ring-blue-600/20',
+    Maintenance: 'bg-amber-50 text-amber-700 ring-amber-600/20',
+    Parking: 'bg-violet-50 text-violet-700 ring-violet-600/20',
+  };
+
+  const summaryCards = [
+    { label: 'Total Expenses (Month)', value: '\u20B945,850', icon: IndianRupee, color: 'blue' },
+    { label: 'Pending Approval', value: '\u20B93,450', icon: Clock, color: 'amber' },
+    { label: 'Average per Vehicle', value: '\u20B91,342', icon: TrendingDown, color: 'emerald' },
+  ];
+
+  const colorMap: Record<string, { bg: string; iconBg: string; text: string }> = {
+    blue: { bg: 'bg-blue-50', iconBg: 'bg-blue-100 text-blue-600', text: 'text-slate-900' },
+    amber: { bg: 'bg-amber-50', iconBg: 'bg-amber-100 text-amber-600', text: 'text-amber-700' },
+    emerald: { bg: 'bg-emerald-50', iconBg: 'bg-emerald-100 text-emerald-600', text: 'text-emerald-700' },
   };
 
   return (
     <ProtectedRoute>
-      <div className="space-y-6">
-        <div className="flex justify-between items-center">
-          <h1 className="text-3xl font-bold text-gray-800">Expenses</h1>
-          <button className="flex items-center space-x-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition">
-            <Plus size={20} />
+      <div className="space-y-6 animate-fade-in">
+        <div className="page-header">
+          <div>
+            <h1 className="page-title">Expenses</h1>
+            <p className="page-subtitle">Track fuel, toll, and maintenance costs</p>
+          </div>
+          <button className="btn-primary">
+            <Plus size={18} />
             <span>Log Expense</span>
           </button>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
-          <div className="bg-white rounded-lg p-4 shadow">
-            <p className="text-gray-600 text-sm">Total Expenses (Month)</p>
-            <h3 className="text-2xl font-bold text-gray-800 mt-2">₹45,850</h3>
-          </div>
-          <div className="bg-white rounded-lg p-4 shadow">
-            <p className="text-gray-600 text-sm">Pending Approval</p>
-            <h3 className="text-2xl font-bold text-orange-600 mt-2">₹3,450</h3>
-          </div>
-          <div className="bg-white rounded-lg p-4 shadow">
-            <p className="text-gray-600 text-sm">Average per Vehicle</p>
-            <h3 className="text-2xl font-bold text-green-600 mt-2">₹1,342</h3>
-          </div>
+        {/* Summary Cards */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+          {summaryCards.map((card) => {
+            const colors = colorMap[card.color];
+            return (
+              <div key={card.label} className="card p-5">
+                <div className="flex items-center gap-4">
+                  <div className={`w-11 h-11 ${colors.iconBg} rounded-xl flex items-center justify-center`}>
+                    <card.icon size={20} />
+                  </div>
+                  <div>
+                    <p className="text-xs font-medium text-slate-500 uppercase tracking-wider">{card.label}</p>
+                    <p className={`text-xl font-bold ${colors.text} mt-0.5`}>{card.value}</p>
+                  </div>
+                </div>
+              </div>
+            );
+          })}
         </div>
 
-        <div className="bg-white rounded-lg shadow overflow-x-auto">
-          <table className="w-full">
-            <thead className="bg-gray-100 border-b">
-              <tr>
-                <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700">
-                  Vehicle
-                </th>
-                <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700">
-                  Type
-                </th>
-                <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700">
-                  Amount
-                </th>
-                <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700">
-                  Description
-                </th>
-                <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700">
-                  Date
-                </th>
-                <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700">
-                  Status
-                </th>
-                <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700">
-                  Actions
-                </th>
-              </tr>
-            </thead>
-            <tbody className="divide-y">
-              {mockExpenses.map((expense) => (
-                <tr key={expense.id} className="hover:bg-gray-50">
-                  <td className="px-6 py-4 font-semibold text-gray-900">
-                    {expense.vehicle_id}
-                  </td>
-                  <td className="px-6 py-4">
-                    <span
-                      className={`px-3 py-1 rounded-full text-sm font-semibold ${
-                        typeColors[expense.type] || 'bg-gray-100 text-gray-800'
-                      }`}
-                    >
-                      {expense.type}
-                    </span>
-                  </td>
-                  <td className="px-6 py-4 text-gray-700">₹{expense.amount}</td>
-                  <td className="px-6 py-4 text-gray-700">{expense.description}</td>
-                  <td className="px-6 py-4 text-gray-700">{expense.date}</td>
-                  <td className="px-6 py-4">
-                    <span
-                      className={`px-3 py-1 rounded-full text-sm font-semibold ${
-                        expense.status === 'Approved'
-                          ? 'bg-green-100 text-green-800'
-                          : 'bg-yellow-100 text-yellow-800'
-                      }`}
-                    >
-                      {expense.status}
-                    </span>
-                  </td>
-                  <td className="px-6 py-4 space-x-2 flex">
-                    <button className="text-blue-600 hover:text-blue-800 p-2 hover:bg-blue-50 rounded">
-                      <Eye size={18} />
-                    </button>
-                    <button className="text-orange-600 hover:text-orange-800 p-2 hover:bg-orange-50 rounded">
-                      <Edit2 size={18} />
-                    </button>
-                    <button className="text-red-600 hover:text-red-800 p-2 hover:bg-red-50 rounded">
-                      <Trash2 size={18} />
-                    </button>
-                  </td>
+        {/* Expense Table */}
+        <div className="card overflow-hidden">
+          <div className="overflow-x-auto">
+            <table className="w-full">
+              <thead>
+                <tr>
+                  <th>Vehicle</th>
+                  <th>Type</th>
+                  <th>Amount</th>
+                  <th>Description</th>
+                  <th>Date</th>
+                  <th>Status</th>
+                  <th className="text-right">Actions</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                {mockExpenses.map((expense) => (
+                  <tr key={expense.id}>
+                    <td className="font-semibold text-slate-900">
+                      {expense.vehicle_id}
+                    </td>
+                    <td>
+                      <span
+                        className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold ring-1 ring-inset ${
+                          typeColors[expense.type] || 'bg-slate-50 text-slate-700 ring-slate-600/20'
+                        }`}
+                      >
+                        {expense.type}
+                      </span>
+                    </td>
+                    <td className="text-slate-600 font-medium">\u20B9{expense.amount}</td>
+                    <td className="text-slate-600">{expense.description}</td>
+                    <td className="text-slate-600">{expense.date}</td>
+                    <td>
+                      <span
+                        className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold ring-1 ring-inset ${
+                          expense.status === 'Approved'
+                            ? 'bg-emerald-50 text-emerald-700 ring-emerald-600/20'
+                            : 'bg-amber-50 text-amber-700 ring-amber-600/20'
+                        }`}
+                      >
+                        <span className={`w-1.5 h-1.5 rounded-full ${expense.status === 'Approved' ? 'bg-emerald-500' : 'bg-amber-500'}`} />
+                        {expense.status}
+                      </span>
+                    </td>
+                    <td>
+                      <div className="flex items-center justify-end gap-1">
+                        <button className="p-2 text-slate-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition">
+                          <Eye size={16} />
+                        </button>
+                        <button className="p-2 text-slate-400 hover:text-amber-600 hover:bg-amber-50 rounded-lg transition">
+                          <Pencil size={16} />
+                        </button>
+                        <button className="p-2 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition">
+                          <Trash2 size={16} />
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
     </ProtectedRoute>

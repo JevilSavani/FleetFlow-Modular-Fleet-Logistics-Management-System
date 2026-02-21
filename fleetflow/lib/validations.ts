@@ -1,6 +1,6 @@
-import { Vehicle, VehicleFormData } from '@/types/vehicle';
-import { Driver, DriverFormData } from '@/types/driver';
-import { Trip, TripFormData } from '@/types/trip';
+import { VehicleFormData } from '@/types/vehicle';
+import { DriverFormData } from '@/types/driver';
+import { TripFormData } from '@/types/trip';
 import { ExpenseFormData } from '@/types/expense';
 
 export function validateVehicleForm(data: VehicleFormData): string[] {

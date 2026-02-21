@@ -6,6 +6,7 @@ import { useVehicles } from '@/hooks/useVehicles';
 import { useRouter } from 'next/navigation';
 import { VEHICLE_TYPES, FUEL_TYPES } from '@/utils/constants';
 import { validateVehicleForm } from '@/lib/validations';
+import { Save } from 'lucide-react';
 
 export function VehicleForm() {
   const [formData, setFormData] = useState<VehicleFormData>({
@@ -56,192 +57,191 @@ export function VehicleForm() {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="max-w-2xl mx-auto space-y-6 bg-white p-6 rounded-lg shadow">
-      {errors.length > 0 && (
-        <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded">
-          {errors.map((error, i) => (
-            <p key={i}>{error}</p>
-          ))}
-        </div>
-      )}
-
-      <div className="grid grid-cols-2 gap-4">
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">
-            Registration Number *
-          </label>
-          <input
-            type="text"
-            name="registration_number"
-            value={formData.registration_number}
-            onChange={handleChange}
-            placeholder="DL-01-AB-1234"
-            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
-            required
-          />
-        </div>
-
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">
-            Vehicle Type *
-          </label>
-          <select
-            name="vehicle_type"
-            value={formData.vehicle_type}
-            onChange={handleChange}
-            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
-          >
-            {VEHICLE_TYPES.map((type) => (
-              <option key={type.value} value={type.value}>
-                {type.label}
-              </option>
+    <form onSubmit={handleSubmit} className="max-w-2xl mx-auto space-y-6">
+      <div className="card p-6 space-y-6">
+        {errors.length > 0 && (
+          <div className="alert-error">
+            {errors.map((error, i) => (
+              <p key={i} className="text-sm">{error}</p>
             ))}
-          </select>
+          </div>
+        )}
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+          <div>
+            <label className="block text-xs font-medium text-slate-500 mb-1.5 uppercase tracking-wider">
+              Registration Number *
+            </label>
+            <input
+              type="text"
+              name="registration_number"
+              value={formData.registration_number}
+              onChange={handleChange}
+              placeholder="DL-01-AB-1234"
+              className="input-field"
+              required
+            />
+          </div>
+
+          <div>
+            <label className="block text-xs font-medium text-slate-500 mb-1.5 uppercase tracking-wider">
+              Vehicle Type *
+            </label>
+            <select
+              name="vehicle_type"
+              value={formData.vehicle_type}
+              onChange={handleChange}
+              className="input-field"
+            >
+              {VEHICLE_TYPES.map((type) => (
+                <option key={type.value} value={type.value}>
+                  {type.label}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          <div>
+            <label className="block text-xs font-medium text-slate-500 mb-1.5 uppercase tracking-wider">
+              Make *
+            </label>
+            <input
+              type="text"
+              name="make"
+              value={formData.make}
+              onChange={handleChange}
+              placeholder="Tata"
+              className="input-field"
+              required
+            />
+          </div>
+
+          <div>
+            <label className="block text-xs font-medium text-slate-500 mb-1.5 uppercase tracking-wider">
+              Model *
+            </label>
+            <input
+              type="text"
+              name="model"
+              value={formData.model}
+              onChange={handleChange}
+              placeholder="LPT 613"
+              className="input-field"
+              required
+            />
+          </div>
+
+          <div>
+            <label className="block text-xs font-medium text-slate-500 mb-1.5 uppercase tracking-wider">
+              Year *
+            </label>
+            <input
+              type="number"
+              name="year"
+              value={formData.year}
+              onChange={handleChange}
+              className="input-field"
+              required
+            />
+          </div>
+
+          <div>
+            <label className="block text-xs font-medium text-slate-500 mb-1.5 uppercase tracking-wider">
+              Fuel Type *
+            </label>
+            <select
+              name="fuel_type"
+              value={formData.fuel_type}
+              onChange={handleChange}
+              className="input-field"
+            >
+              {FUEL_TYPES.map((type) => (
+                <option key={type.value} value={type.value}>
+                  {type.label}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          <div>
+            <label className="block text-xs font-medium text-slate-500 mb-1.5 uppercase tracking-wider">
+              Max Capacity (kg) *
+            </label>
+            <input
+              type="number"
+              name="max_capacity"
+              value={formData.max_capacity}
+              onChange={handleChange}
+              placeholder="5000"
+              className="input-field"
+              required
+            />
+          </div>
+
+          <div>
+            <label className="block text-xs font-medium text-slate-500 mb-1.5 uppercase tracking-wider">
+              Fuel Efficiency (km/l) *
+            </label>
+            <input
+              type="number"
+              name="fuel_efficiency"
+              value={formData.fuel_efficiency}
+              onChange={handleChange}
+              placeholder="8.5"
+              step="0.1"
+              className="input-field"
+              required
+            />
+          </div>
+
+          <div>
+            <label className="block text-xs font-medium text-slate-500 mb-1.5 uppercase tracking-wider">
+              Purchase Date *
+            </label>
+            <input
+              type="date"
+              name="purchase_date"
+              value={formData.purchase_date}
+              onChange={handleChange}
+              className="input-field"
+              required
+            />
+          </div>
+
+          <div>
+            <label className="block text-xs font-medium text-slate-500 mb-1.5 uppercase tracking-wider">
+              Insurance Expiry *
+            </label>
+            <input
+              type="date"
+              name="insurance_expiry"
+              value={formData.insurance_expiry}
+              onChange={handleChange}
+              className="input-field"
+              required
+            />
+          </div>
+
+          <div>
+            <label className="block text-xs font-medium text-slate-500 mb-1.5 uppercase tracking-wider">
+              Pollution Certificate Expiry *
+            </label>
+            <input
+              type="date"
+              name="pollution_certificate_expiry"
+              value={formData.pollution_certificate_expiry}
+              onChange={handleChange}
+              className="input-field"
+              required
+            />
+          </div>
         </div>
 
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">
-            Make *
-          </label>
-          <input
-            type="text"
-            name="make"
-            value={formData.make}
-            onChange={handleChange}
-            placeholder="Tata"
-            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
-            required
-          />
-        </div>
-
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">
-            Model *
-          </label>
-          <input
-            type="text"
-            name="model"
-            value={formData.model}
-            onChange={handleChange}
-            placeholder="LPT 613"
-            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
-            required
-          />
-        </div>
-
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">
-            Year *
-          </label>
-          <input
-            type="number"
-            name="year"
-            value={formData.year}
-            onChange={handleChange}
-            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
-            required
-          />
-        </div>
-
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">
-            Fuel Type *
-          </label>
-          <select
-            name="fuel_type"
-            value={formData.fuel_type}
-            onChange={handleChange}
-            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
-          >
-            {FUEL_TYPES.map((type) => (
-              <option key={type.value} value={type.value}>
-                {type.label}
-              </option>
-            ))}
-          </select>
-        </div>
-
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">
-            Max Capacity (kg) *
-          </label>
-          <input
-            type="number"
-            name="max_capacity"
-            value={formData.max_capacity}
-            onChange={handleChange}
-            placeholder="5000"
-            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
-            required
-          />
-        </div>
-
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">
-            Fuel Efficiency (km/l) *
-          </label>
-          <input
-            type="number"
-            name="fuel_efficiency"
-            value={formData.fuel_efficiency}
-            onChange={handleChange}
-            placeholder="8.5"
-            step="0.1"
-            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
-            required
-          />
-        </div>
-
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">
-            Purchase Date *
-          </label>
-          <input
-            type="date"
-            name="purchase_date"
-            value={formData.purchase_date}
-            onChange={handleChange}
-            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
-            required
-          />
-        </div>
-
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">
-            Insurance Expiry *
-          </label>
-          <input
-            type="date"
-            name="insurance_expiry"
-            value={formData.insurance_expiry}
-            onChange={handleChange}
-            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
-            required
-          />
-        </div>
-
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">
-            Pollution Certificate Expiry *
-          </label>
-          <input
-            type="date"
-            name="pollution_certificate_expiry"
-            value={formData.pollution_certificate_expiry}
-            onChange={handleChange}
-            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
-            required
-          />
-        </div>
+        <button type="submit" disabled={loading} className="btn-primary w-full py-3">
+          <Save size={18} />
+          <span>{loading ? 'Creating...' : 'Create Vehicle'}</span>
+        </button>
       </div>
-
-      <button
-        type="submit"
-        disabled={loading}
-        className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-lg disabled:opacity-50 transition"
-      >
-        {loading ? 'Creating...' : 'Create Vehicle'}
-      </button>
     </form>
   );
 }
